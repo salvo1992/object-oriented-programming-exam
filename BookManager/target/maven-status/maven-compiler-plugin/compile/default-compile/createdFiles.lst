@@ -1,0 +1,10 @@
+Main.class
+utils\FileManager.class
+exceptions\BookException.class
+controller\BookController.class
+view\BookManagerGUI.class
+model\Book.class
+utils\LoggerUtil.class
+model\BookIterator.class
+model\BookCategory.class
+model\BookFactory.class

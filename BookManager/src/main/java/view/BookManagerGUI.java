@@ -2,9 +2,12 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -14,22 +17,36 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import controller.BookController;
+import exceptions.BookException;
 import model.Book;
+import model.BookIterator;
+import observer.BookListObserver;
+import strategy.SortByAuthor;
+import strategy.SortByTitle;
+import strategy.SortByYear;
+import utils.FileManager;
+import utils.LoggerUtil;
 
-public class BookManagerGUI extends JFrame {
+
+
+public class BookManagerGUI extends JFrame implements BookListObserver {
     private final BookController controller;
     private DefaultListModel<Book> listModel;
     private JList<Book> bookList;
 
     private JTextField titleField, authorField, yearField, genreField;
 
+    // Logger Singleton
+    private static final Logger logger = LoggerUtil.getInstance();
+
     public BookManagerGUI(BookController controller) {
         this.controller = controller;
         setTitle("Book Manager");
-        setSize(600, 400);
+        setSize(700, 420);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        initComponents();
+        initComponents(); 
+        controller.addObserver(this);
     }
 
     private void initComponents() {
@@ -49,18 +66,51 @@ public class BookManagerGUI extends JFrame {
         inputPanel.add(new JLabel("Genere:"));
         inputPanel.add(genreField);
 
+        // ComboBox per ordinamento (Strategy)
+        String[] opzioniOrdinamento = {"Titolo", "Autore", "Anno"};
+        JComboBox<String> sortBox = new JComboBox<>(opzioniOrdinamento);
+        sortBox.addActionListener(e -> {
+            switch ((String) sortBox.getSelectedItem()) {
+                case "Titolo"-> controller.setSortStrategy(new SortByTitle());
+                   
+                case "Autore"->
+                    controller.setSortStrategy(new SortByAuthor());
+                  
+                case "Anno"->
+                    controller.setSortStrategy(new SortByYear());
+                
+                default -> throw new IllegalStateException("Unexpected value: " + sortBox.getSelectedItem());
+            }
+            controller.sortBooks();
+            refreshList();
+            logger.info("Ordinamento cambiato: " + sortBox.getSelectedItem());
+        });
+        inputPanel.add(new JLabel("Ordina per:"));
+        inputPanel.add(sortBox);
+
         // Pulsanti
         JButton addBtn = new JButton("Aggiungi");
         JButton removeBtn = new JButton("Rimuovi");
         JButton saveBtn = new JButton("Salva");
         JButton loadBtn = new JButton("Carica");
+        JButton exportBtn = new JButton("Esporta CSV");
 
         addBtn.addActionListener(this::addBook);
         removeBtn.addActionListener(this::removeBook);
-        saveBtn.addActionListener(e -> controller.saveBooks("books_data.txt"));
-        loadBtn.addActionListener(e -> {
-            controller.loadBooks("books_data.txt");
-            refreshList();
+
+        saveBtn.addActionListener(e -> {
+            controller.saveBooks("books_data.txt");
+            logger.info("Libri salvati su file.");
+            JOptionPane.showMessageDialog(this, "Libri salvati!", "Salva", JOptionPane.INFORMATION_MESSAGE);
+        });
+
+        // Caricamento asincrono con refresh automatico
+        loadBtn.addActionListener(e -> controller.loadBooksAsync("books_data.txt", this::refreshList));
+
+        exportBtn.addActionListener(e -> {
+            FileManager.exportToCSV(controller.getBooks(), "books_export.csv");
+            logger.info("Libri esportati in books_export.csv.");
+            JOptionPane.showMessageDialog(this, "Libri esportati in books_export.csv!", "Export", JOptionPane.INFORMATION_MESSAGE);
         });
 
         JPanel buttonPanel = new JPanel();
@@ -68,6 +118,7 @@ public class BookManagerGUI extends JFrame {
         buttonPanel.add(removeBtn);
         buttonPanel.add(saveBtn);
         buttonPanel.add(loadBtn);
+        buttonPanel.add(exportBtn);
 
         // Lista dei libri
         listModel = new DefaultListModel<>();
@@ -79,34 +130,59 @@ public class BookManagerGUI extends JFrame {
         add(inputPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
+
+        // Ordinamento di default e refresh lista
+        controller.setSortStrategy(new SortByTitle());
+        controller.sortBooks();
+        refreshList();
     }
 
     private void addBook(ActionEvent e) {
-        try {
-            String title = titleField.getText();
-            String author = authorField.getText();
-            int year = Integer.parseInt(yearField.getText());
-            String genre = genreField.getText();
+    try {
+        String title = titleField.getText();
+        String author = authorField.getText();
+        int year = Integer.parseInt(yearField.getText());
+        String genre = genreField.getText();
 
-            controller.addBook(title, author, year, genre);
-            refreshList();
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Anno non valido!", "Errore", JOptionPane.ERROR_MESSAGE);
-        }
+        controller.addBook(title, author, year, genre);
+        logger.log(Level.INFO, "Libro aggiunto: {0} - {1}", new Object[]{title, author});
+
+        // Pulisci i campi dopo inserimento
+        titleField.setText("");
+        authorField.setText("");
+        yearField.setText("");
+        genreField.setText("");
+    } catch (BookException ex) {
+        logger.severe("Errore aggiunta libro: " + ex.getMessage());
+        JOptionPane.showMessageDialog(this, ex.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
+    } catch (NumberFormatException ex) {
+        logger.severe("Errore inserimento anno: " + ex.getMessage());
+        JOptionPane.showMessageDialog(this, "Anno non valido!", "Errore", JOptionPane.ERROR_MESSAGE);
     }
+}
 
     private void removeBook(ActionEvent e) {
         Book selected = bookList.getSelectedValue();
         if (selected != null) {
             controller.removeBook(selected);
-            refreshList();
+            logger.info("Libro rimosso: " + selected.getTitle());
+           
         }
     }
 
     private void refreshList() {
         listModel.clear();
-        for (Book b : controller.getBooks()) {
-            listModel.addElement(b);
+        // Usa BookIterator
+        BookIterator iterator = new BookIterator(controller.getBooks());
+        while (iterator.hasNext()) {
+            listModel.addElement(iterator.next());
         }
     }
+@Override
+public void onBookListChanged() {
+    refreshList();
 }
+
+
+}
+

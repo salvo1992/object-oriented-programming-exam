@@ -1,10 +1,15 @@
-Main.class
 utils\FileManager.class
 exceptions\BookException.class
-controller\BookController.class
+strategy\SortByAuthor.class
 view\BookManagerGUI.class
+strategy\SortByTitle.class
+observer\BookListObserver.class
+Main.class
+controller\BookController.class
 model\Book.class
+strategy\SortStrategy.class
 utils\LoggerUtil.class
 model\BookIterator.class
 model\BookCategory.class
 model\BookFactory.class
+strategy\SortByYear.class

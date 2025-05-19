@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import controller.BookController;
+import exceptions.BookException;
 import model.Book;
 
 class BookTest {
@@ -19,7 +20,7 @@ class BookTest {
     }
 
     @Test
-    void testAddBook() {
+    void testAddBook() throws BookException {
         controller.addBook("1984", "George Orwell", 1949, "Distopia");
         List<Book> books = controller.getBooks();
         assertEquals(1, books.size());
@@ -27,7 +28,7 @@ class BookTest {
     }
 
     @Test
-    void testRemoveBook() {
+    void testRemoveBook() throws BookException {
         controller.addBook("Il Signore degli Anelli", "Tolkien", 1954, "Fantasy");
         Book book = controller.getBooks().get(0);
         controller.removeBook(book);

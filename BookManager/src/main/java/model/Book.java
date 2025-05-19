@@ -16,10 +16,10 @@ public class Book implements Serializable {
     }
 
     // Getter
-    public String getTitle() { return title; }
+    public String getTitle() { return   title; }
     public String getAuthor() { return author; }
-    public int getYear() { return year; }
-    public String getGenre() { return genre; }
+    public int getYear() { return  year; }
+    public String getGenre() { return  genre; }
 
     @Override
     public String toString() {

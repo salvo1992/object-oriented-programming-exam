@@ -3,6 +3,7 @@
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,4 +35,29 @@ class BookTest {
         controller.removeBook(book);
         assertTrue(controller.getBooks().isEmpty());
     }
+
+@Test
+public void testAutoreNumerico() {
+    BookController c = new BookController();
+    assertThrows(BookException.class, () -> {
+        c.addBook("Titolo", "1234", 2022, "Romanzo");
+    });
+}
+@Test
+public void testGenereNumerico() {
+    BookController c = new BookController();
+    assertThrows(BookException.class, () -> {
+        c.addBook("Titolo", "Autore", 2022, "12345");
+    });
+}
+@Test
+public void testAnnoFuturo() {
+    BookController c = new BookController();
+    assertThrows(BookException.class, () -> {
+        c.addBook("Titolo", "Autore", 3000, "Romanzo");
+    });
+}
+
+
+
 }

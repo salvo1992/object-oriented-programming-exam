@@ -1,10 +1,12 @@
 package controller;
 
-import static org.mockito.Mockito.*;
-
-import observer.BookListObserver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
+import observer.BookListObserver;
 
 public class BookControllerTest {
 
@@ -32,5 +34,7 @@ public class BookControllerTest {
         // Deve essere stato chiamato due volte: aggiunta e rimozione
         verify(observerMock, times(2)).onBookListChanged();
     }
+
+    
 }
 

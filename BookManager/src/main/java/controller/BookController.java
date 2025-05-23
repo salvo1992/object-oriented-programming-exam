@@ -1,4 +1,5 @@
 package controller;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -49,21 +50,26 @@ public class BookController {
         }
     }
 
-    public void addBook(String title, String author, int year, String genre) throws BookException {
-    if (title == null || title.isBlank())
+   public void addBook(String title, String author, int year, String genre) throws BookException {
+    if (title == null || title.trim().isEmpty())
         throw new BookException("Titolo non valido!");
-    if (author == null || author.isBlank())
+    if (author == null || author.trim().isEmpty() || isNumeric(author))
         throw new BookException("Autore non valido!");
-    if (year <= 0)
+    if (year <= 0 || year > LocalDate.now().getYear())
         throw new BookException("Anno non valido!");
-    if (genre == null || genre.isBlank())
+    if (genre == null || genre.trim().isEmpty() || isNumeric(genre))
         throw new BookException("Genere non valido!");
+
     Book book = BookFactory.createBook(title, author, year, genre);
     books.add(book);
     logger.log(Level.INFO, "Libro aggiunto: {0}", book);
-
     notifyObservers();
-    
+}
+
+// Metodo di utilità
+private boolean isNumeric(String str) {
+    if (str == null) return false;
+    return str.chars().allMatch(Character::isDigit);
 }
 
     public void removeBook(Book book) {
@@ -97,14 +103,16 @@ public List<Book> filterByGenre(String genre) {
 
     public void saveBooks(String filename) {
         FileManager.saveToFile(books);
-        logger.info("Libri salvati su file.");
+        logger.log(Level.INFO, "Libri salvati su file.");
+
     }
 
    public void loadBooks(String filename) {
     List<Book> loaded = FileManager.loadFromFile();
     if (loaded != null) {
         books = loaded;
-        logger.info("Libri caricati da file.");
+        logger.log(Level.INFO, "Libri caricati da file.");
+
     } else {
         logger.warning("Caricamento fallito.");
     }

@@ -9,9 +9,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import model.Book;
+import model.BookFactory;
 
 public class FileManager {
      private static final Logger logger = LoggerUtil.getInstance();
@@ -30,7 +32,7 @@ public class FileManager {
                 writer.write(line);
                 writer.newLine();
             }
-            logger.info("Libri salvati su file: " + DATA_FILE);
+           logger.log(Level.INFO,"Libri salvati su file: {0}" , DATA_FILE);
         } catch (IOException e) {
             logger.severe("Errore nel salvataggio dei libri: " + e.getMessage());
         }
@@ -56,10 +58,11 @@ public class FileManager {
                 genre = line.substring(line.indexOf(":") + 1).trim();
                 // Skip separatore
                 reader.readLine();
-                list.add(new Book(title, author, year, genre));
+                list.add(BookFactory.createBook(title, author, year, genre));
             }
         }
-        logger.info("Caricati " + list.size() + " libri da " + DATA_FILE);
+        logger.log(Level.INFO, "Caricati {0} libri da {1}", new Object[]{list.size(), DATA_FILE});
+
     } catch (IOException | NumberFormatException e) {
         logger.severe("Errore nel caricamento dei libri: " + e.getMessage());
     }

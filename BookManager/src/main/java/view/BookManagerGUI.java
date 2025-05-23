@@ -83,7 +83,8 @@ public class BookManagerGUI extends JFrame implements BookListObserver {
             }
             controller.sortBooks();
             refreshList();
-            logger.info("Ordinamento cambiato: " + sortBox.getSelectedItem());
+            logger.log(Level.INFO, "Ordinamento cambiato: {0}", sortBox.getSelectedItem());
+
         });
         inputPanel.add(new JLabel("Ordina per:"));
         inputPanel.add(sortBox);
@@ -100,7 +101,8 @@ public class BookManagerGUI extends JFrame implements BookListObserver {
 
         saveBtn.addActionListener(e -> {
             controller.saveBooks("books_data.txt");
-            logger.info("Libri salvati su file.");
+            logger.log(Level.INFO, "Libri salvati su file.");
+
             JOptionPane.showMessageDialog(this, "Libri salvati!", "Salva", JOptionPane.INFORMATION_MESSAGE);
         });
 
@@ -109,7 +111,8 @@ public class BookManagerGUI extends JFrame implements BookListObserver {
 
         exportBtn.addActionListener(e -> {
             FileManager.exportToCSV(controller.getBooks(), "books_export.csv");
-            logger.info("Libri esportati in books_export.csv.");
+            logger.log(Level.INFO, "Libri esportati in books_export.csv.");
+
             JOptionPane.showMessageDialog(this, "Libri esportati in books_export.csv!", "Export", JOptionPane.INFORMATION_MESSAGE);
         });
 
@@ -165,7 +168,8 @@ public class BookManagerGUI extends JFrame implements BookListObserver {
         Book selected = bookList.getSelectedValue();
         if (selected != null) {
             controller.removeBook(selected);
-            logger.info("Libro rimosso: " + selected.getTitle());
+           logger.log(Level.INFO, "Libro rimosso: {0}", selected.getTitle());
+
            
         }
     }

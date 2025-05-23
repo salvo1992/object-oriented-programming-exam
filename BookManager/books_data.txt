@@ -1,15 +1,5 @@
-il titolo è: il lago
- l'autore è: gion
- lanno è: 1860
- il genere è: triller
- ----------------------------------
-il titolo è: il fantasma
- l'autore è: brown
- lanno è: 1870
- il genere è: giallo
- ----------------------------------
-il titolo è: l orca
- l'autore è: ruben
- lanno è: 1994
- il genere è: giallo
+il titolo è: hh
+ l'autore è: hhbh
+ lanno è: 65
+ il genere è: hhhh
  ----------------------------------

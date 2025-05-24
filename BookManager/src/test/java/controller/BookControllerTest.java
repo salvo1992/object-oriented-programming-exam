@@ -1,11 +1,13 @@
 package controller;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import exceptions.BookException;
 import observer.BookListObserver;
 
 public class BookControllerTest {
@@ -35,6 +37,37 @@ public class BookControllerTest {
         verify(observerMock, times(2)).onBookListChanged();
     }
 
-    
+    @Test
+public void testAddBookTitoloVuoto() {
+    BookController controller = new BookController();
+    assertThrows(BookException.class, () -> {
+        controller.addBook("", "Autore", 2020, "Genere");
+    });
+}
+
+@Test
+public void testAddBookAutoreNumerico() {
+    BookController controller = new BookController();
+    assertThrows(BookException.class, () -> {
+        controller.addBook("Titolo", "12345", 2020, "Genere");
+    });
+}
+
+@Test
+public void testAddBookGenereNumerico() {
+    BookController controller = new BookController();
+    assertThrows(BookException.class, () -> {
+        controller.addBook("Titolo", "Autore", 2020, "1234");
+    });
+}
+
+@Test
+public void testAddBookAnnoFuturo() {
+    BookController controller = new BookController();
+    int nextYear = java.time.LocalDate.now().getYear() + 1;
+    assertThrows(BookException.class, () -> {
+        controller.addBook("Titolo", "Autore", nextYear, "Genere");
+    });
+}
 }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="BookTest" time="0.053" tests="5" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="model.BookCategoryTest" time="0.006" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -59,19 +59,12 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="testGenereNumerico" classname="BookTest" time="0.027"/>
-  <testcase name="testAddBook" classname="BookTest" time="0.013">
-    <system-err><![CDATA[mag 24, 2025 4:53:52 PM controller.BookController addBook
-INFORMAZIONI: Libro aggiunto: 1984 (1949) - George Orwell | Distopia
-]]></system-err>
+  <testcase name="testBookCategoryComposite" classname="model.BookCategoryTest" time="0.005">
+    <system-out><![CDATA[📚 Categoria: Root
+  📚 Categoria: Classici
+    - Il nome della rosa (1980) - Eco | Giallo
+  📚 Categoria: Distopici
+    - 1984 (1949) - Orwell | Distopico
+]]></system-out>
   </testcase>
-  <testcase name="testRemoveBook" classname="BookTest" time="0.002">
-    <system-err><![CDATA[mag 24, 2025 4:53:52 PM controller.BookController addBook
-INFORMAZIONI: Libro aggiunto: Il Signore degli Anelli (1954) - Tolkien | Fantasy
-mag 24, 2025 4:53:52 PM controller.BookController removeBook
-INFORMAZIONI: Libro rimosso: Il Signore degli Anelli (1954) - Tolkien | Fantasy
-]]></system-err>
-  </testcase>
-  <testcase name="testAnnoFuturo" classname="BookTest" time="0.001"/>
-  <testcase name="testAutoreNumerico" classname="BookTest" time="0.001"/>
 </testsuite>

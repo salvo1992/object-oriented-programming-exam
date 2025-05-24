@@ -1,5 +1,4 @@
 package controller;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -55,7 +54,7 @@ public class BookController {
         throw new BookException("Titolo non valido!");
     if (author == null || author.trim().isEmpty() || isNumeric(author))
         throw new BookException("Autore non valido!");
-    if (year <= 0 || year > LocalDate.now().getYear())
+    if (year <= 0 || year > java.time.LocalDate.now().getYear())
         throw new BookException("Anno non valido!");
     if (genre == null || genre.trim().isEmpty() || isNumeric(genre))
         throw new BookException("Genere non valido!");
@@ -66,11 +65,11 @@ public class BookController {
     notifyObservers();
 }
 
-// Metodo di utilità
 private boolean isNumeric(String str) {
     if (str == null) return false;
     return str.chars().allMatch(Character::isDigit);
 }
+
 
     public void removeBook(Book book) {
         books.remove(book);

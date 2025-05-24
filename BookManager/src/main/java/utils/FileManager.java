@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import exceptions.BookException;
 import model.Book;
 import model.BookFactory;
 
@@ -37,7 +38,10 @@ public class FileManager {
             logger.severe("Errore nel salvataggio dei libri: " + e.getMessage());
         }
     }
-
+private static boolean isNumeric(String str) {
+    if (str == null) return false;
+    return str.chars().allMatch(Character::isDigit);
+}
   public static List<Book> loadFromFile() {
     List<Book> list = new ArrayList<>();
     if (!Files.exists(DATA_FILE)) {
@@ -58,7 +62,21 @@ public class FileManager {
                 genre = line.substring(line.indexOf(":") + 1).trim();
                 // Skip separatore
                 reader.readLine();
-                list.add(BookFactory.createBook(title, author, year, genre));
+               try {
+    // Validazione uguale al controller
+    if (title == null || title.trim().isEmpty())
+        throw new BookException("Titolo non valido!");
+    if (author == null || author.trim().isEmpty() || isNumeric(author))
+        throw new BookException("Autore non valido!");
+    if (year <= 0 || year > java.time.LocalDate.now().getYear())
+        throw new BookException("Anno non valido!");
+    if (genre == null || genre.trim().isEmpty() || isNumeric(genre))
+        throw new BookException("Genere non valido!");
+
+    list.add(BookFactory.createBook(title, author, year, genre));
+} catch (BookException ex) {
+    logger.warning("Libro non valido nel file: " + ex.getMessage());
+}
             }
         }
         logger.log(Level.INFO, "Caricati {0} libri da {1}", new Object[]{list.size(), DATA_FILE});

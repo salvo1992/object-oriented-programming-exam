@@ -3,3 +3,8 @@ il titolo è: hh
  lanno è: 65
  il genere è: hhhh
  ----------------------------------
+il titolo è: franco
+ l'autore è: leonardi
+ lanno è: 1869
+ il genere è: poetico
+ ----------------------------------

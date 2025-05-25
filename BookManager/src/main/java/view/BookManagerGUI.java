@@ -100,10 +100,15 @@ public class BookManagerGUI extends JFrame implements BookListObserver {
         removeBtn.addActionListener(this::removeBook);
 
         saveBtn.addActionListener(e -> {
-            controller.saveBooks("books_data.txt");
-            logger.log(Level.INFO, "Libri salvati su file.");
+            try {
+                controller.saveBooks("books_data.txt");
+                logger.log(Level.INFO, "Libri salvati su file.");
 
-            JOptionPane.showMessageDialog(this, "Libri salvati!", "Salva", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Libri salvati!", "Salva", JOptionPane.INFORMATION_MESSAGE);
+            } catch (BookException ex) {
+                logger.severe("Errore salvataggio libri: " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
+            }
         });
 
         // Caricamento asincrono con refresh automatico

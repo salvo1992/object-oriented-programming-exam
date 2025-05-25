@@ -1,82 +1,93 @@
-# object-oriented-programming-exam
+# 📚 BookManager Java SE Project
 
-//✅ Spiegazione dei Componenti
-model/ – Contiene i dati e la logica:
+## ✅ Overview
 
-Book è la classe dei libri
+BookManager è un'applicazione Java SE con interfaccia grafica Swing che consente la gestione di una libreria personale. L'utente può:
 
-BookFactory applica il pattern Factory
+* Aggiungere e rimuovere libri
+* Ordinare i libri per titolo, autore o anno
+* Salvare e caricare i dati da file
+* Esportare l'elenco in CSV
 
-BookCategory struttura i generi (Composite)
-
-BookIterator per iterare i libri
-
-controller/ – Coordina azioni tra GUI e modello
-
-view/ – Interfaccia grafica Swing
-
-utils/ – Utilità per file e log
-
-exceptions/ – Gestione errori con sicurezza
-
-test/ – Test unitari (JUnit)
-
-
-# 📚 BookManager – Progetto Finale Java SE
-
-## ✅ Descrizione
-
-BookManager è un'applicazione Java SE con interfaccia grafica che consente di gestire una libreria personale. Gli utenti possono aggiungere, rimuovere, visualizzare e salvare libri con titolo, autore, anno e genere. I dati vengono salvati su file e possono essere ricaricati.
+Ogni libro è rappresentato da titolo, autore, anno e genere.
 
 ---
 
-## 🧠 Funzionalità
+## 🤖 Technologies and Design Patterns
 
-- Inserimento di libri con validazione dei dati
-- Visualizzazione elenco dei libri
-- Rimozione libro selezionato
-- Salvataggio e caricamento da file
-- Interfaccia grafica in Swing
-- Gestione sicura delle eccezioni
-- Logging degli eventi e degli errori
-- Test unitari con JUnit
+### Core Requirements
 
----
+| Tecnologie / Pattern       | Motivazione                                                                   |
+| -------------------------- | ----------------------------------------------------------------------------- |
+| **Factory**                | `BookFactory` centralizza la creazione dei libri                              |
+| **Composite**              | `BookCategory` consente gerarchie di categorie e sottocategorie               |
+| **Iterator**               | `BookIterator` per iterare in modo controllato sulla lista                    |
+| **Exception Shielding**    | Eccezioni come `BookException` schermano input invalidi e notificano l'utente |
+| **Collections + Generics** | Uso estensivo di `List<Book>`                                                 |
+| **Java I/O**               | `FileManager` usa `java.nio.file.*` per lettura/scrittura                     |
+| **Logging**                | `LoggerUtil` centralizza la gestione log                                      |
+| **JUnit Testing**          | Test unitari su controller, modello e categorie                               |
 
-## 🛠 Tecnologie e Pattern Utilizzati
+### Advanced
 
-| Categoria               | Elemento                                 | Giustificazione                                                                                                                                     |
-|------------------------|------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Design Pattern**     | Factory                                   | Utilizzato per creare oggetti `Book` in modo centralizzato.                                                                                         |
-|                        | Composite                                 | Utilizzato nella classe `BookCategory` per gestire categorie gerarchiche.                                                                           |
-|                        | Iterator                                  | Classe `BookIterator` per iterare in sicurezza sui libri.                                                                                           |
-|                        | Exception Shielding                       | Gestione eccezioni in `FileManager`, GUI e controller: evita crash e stack trace.                                                                   |
-| **Core Technologies**  | Java Collections & Generics               | `List<Book>`, `DefaultListModel<Book>`, gestione dei dati generici.                                                                                 |
-|                        | Java I/O                                  | Serializzazione di oggetti `Book` in `FileManager.java`.                                                                                             |
-|                        | Logging                                   | Log centralizzato via `LoggerUtil.java` per eventi e errori.                                                                                        |
-|                        | JUnit Testing                             | Test automatizzati per controller e funzionalità base (`BookTest.java`).                                                                            |
+| Feature                 | Motivazione                                                                   |
+| ----------------------- | ----------------------------------------------------------------------------- |
+| **Strategy**            | `SortStrategy` per gestire ordinamenti flessibili                             |
+| **Observer**            | `BookManagerGUI` si aggiorna automaticamente a ogni modifica                  |
+| **Thread (Async Load)** | Esecuzione asincrona sia di caricamento che salvataggio con `ExecutorService` |
+| **Stream API**          | Filtering e conteggi reattivi                                                 |
 
 ---
 
-## 🔐 Sicurezza
+## ⚡ Setup & Execution
 
-- Nessun dato sensibile hardcoded
-- Tutti gli input sono validati (es. l'anno è parsato in `int`)
-- Tutte le eccezioni sono catturate e loggate (Exception Shielding)
-- L'app non crasha in caso di errore: feedback all’utente tramite GUI
+### Requisiti
 
----
+* JDK 17+
+* Maven
 
-## ▶️ Esecuzione
-
-### 🧩 Requisiti
-
-- Java SE 11+
-- JDK configurato nel PATH
-- IDE (consigliato: IntelliJ IDEA, Eclipse) o CLI
-
-### 🚀 Compilazione ed esecuzione
+### Compilazione
 
 ```bash
-javac -d out -cp src src/Main.java
-java -cp out Main
+cd BookManager
+mvn clean install
+```
+
+### Esecuzione
+
+```bash
+mvn exec:java -Dexec.mainClass="Main"
+```
+
+Oppure:
+
+```bash
+java -cp target/classes Main
+```
+
+---
+
+## 🖌️ UML Diagrams
+
+* `src/uml/class-diagram1.png`
+* `src/uml/architecture-diagram1.png`
+
+---
+
+## ❌ Limitazioni & Future Work
+
+* Parser `.txt` migliorabile con formati strutturati (JSON, XML)
+* Aggiunta supporto a ricerca full-text
+* Test per componenti GUI
+
+---
+
+## 🤝 Contributori
+
+* \[SALVATORE DI MARIA] – autore principale
+
+---
+
+## ✏️ Note Finali
+
+Il progetto segue principi SOLID, MVC e design pattern per garantire modularità e manutenibilità.

@@ -8,3 +8,8 @@ il titolo è: franco
  lanno è: 1869
  il genere è: poetico
  ----------------------------------
+il titolo è: il figlio 
+ l'autore è: caravaggio
+ lanno è: 1875
+ il genere è: romanzo
+ ----------------------------------

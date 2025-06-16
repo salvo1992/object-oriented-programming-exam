@@ -8,8 +8,13 @@ il titolo è: franco
  lanno è: 1869
  il genere è: poetico
  ----------------------------------
-il titolo è: il figlio 
+il titolo è: il figlio
  l'autore è: caravaggio
  lanno è: 1875
+ il genere è: romanzo
+ ----------------------------------
+il titolo è: il fiasco
+ l'autore è: brandy
+ lanno è: 1865
  il genere è: romanzo
  ----------------------------------
